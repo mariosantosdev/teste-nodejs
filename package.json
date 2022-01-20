@@ -1,9 +1,11 @@
 {
   "name": "teste-nodejs",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/app/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only app/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only app/server.ts",
+    "docker": "dockep-compose up",
+    "start": "tsc && node dist/app/server"
   },
   "repository": {
     "type": "git",

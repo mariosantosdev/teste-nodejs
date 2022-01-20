@@ -4,6 +4,10 @@
 
 Esse teste prático visa avaliar os conhecimentos do candidato a vaga de programador back-end NODEJS.
 
+# Scripts
+    - `npm run docker` - Execute the database
+    - `npm run start` - Compile and execute the app
+
 # EndPoints
     - <GET> /empresa/:cnpj - Retorna as informações da empresa
     - <PUT> /empresa/cnpj - Atualiza as informações da empresa
