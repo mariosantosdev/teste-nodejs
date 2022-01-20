@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 import { receitaApi } from "../../utils/api";
 import ServiceCreateAddress from "./ServiceCreateAddress";
@@ -26,17 +26,45 @@ async function getBusinessInfosFromAPI(cnpj: string) {
     return { businessFromApi, addressFromAPI };
 }
 
-export default async function ServiceCreateBusiness(cnpj: string) {
-    try {
-        const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
+// If the param @data receive `{}` then nothing will happen
+function updateBusinessAfterCreate(cnpj: string, data: Prisma.BusinessUpdateInput) {
+    const updateEndereco = data.endereco;
+    delete data.endereco;
+
+    const updateBusiness = prisma.business.update({
+        where: { rawCnpj: cnpj },
+        data: {
+            ...data,
+            endereco: {
+                update: updateEndereco
+            }
+        },
+        select: {
+            id: true,
+            atividade_principal: true,
+            cnpj: true,
+            data_de_abertura: true,
+            natureza_juridica: true,
+            nome_fantasia: true,
+            razao_social: true,
+            endereco: true,
+        }
+    });
+
+    return updateBusiness;
+}
+
+export default async function ServiceCreateBusiness(cnpj: string, afterCreate: Prisma.BusinessUpdateInput = {}) {
+    try {
         const { addressFromAPI, businessFromApi } = await getBusinessInfosFromAPI(cnpj);
 
         await prisma.$connect();
 
         const { id: addressId } = await ServiceCreateAddress(addressFromAPI);
 
-        const business = await prisma.business.create({
+        const createBusiness = prisma.business.create({
             data: {
                 ...businessFromApi,
                 rawCnpj: cnpj,
@@ -54,9 +82,13 @@ export default async function ServiceCreateBusiness(cnpj: string) {
             }
         });
 
+        const updateBusiness = updateBusinessAfterCreate(cnpj, afterCreate);
+
+        const [business, businessUpdated] = await prisma.$transaction([createBusiness, updateBusiness])
+
         await prisma.$disconnect();
 
-        return business;
+        return afterCreate === {} ? business : businessUpdated;
     } catch (error: any) {
         console.error(error)
         return error;
