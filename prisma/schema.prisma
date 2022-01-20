@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:admin@localhost:3307/test_node"
+}
+
+model Business {
+  id                  Int      @id @default(autoincrement())
+  cnpj                String   @unique
+  razao_social        String
+  nome_fantasia       String
+  atividade_principal String
+  data_de_abertura    String
+  natureza_juridica   String
+  endereco            Address  @relation(fields: [enderecoId], references: [id])
+  enderecoId          Int      @unique
+  createdAt           DateTime @default(now())
+  updateAt            DateTime @updatedAt
+}
+
+model Address {
+  id             Int       @id @default(autoincrement())
+  cep            String
+  logradouro     String
+  codigo_do_ibge String
+  cidade         String
+  estado         String
+  pais           String
+  createdAt      DateTime  @default(now())
+  updateAt       DateTime  @updatedAt
+  Business       Business?
+}
