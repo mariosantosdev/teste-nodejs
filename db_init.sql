@@ -33,3 +33,18 @@ CREATE TABLE `Address` (
 
 -- AddForeignKey
 ALTER TABLE `Business` ADD CONSTRAINT `Business_enderecoId_fkey` FOREIGN KEY (`enderecoId`) REFERENCES `Address`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- DropForeignKey
+ALTER TABLE `Business` DROP FOREIGN KEY `Business_enderecoId_fkey`;
+
+-- DropIndex
+DROP INDEX `Business_cnpj_key` ON `Business`;
+
+-- AlterTable
+ALTER TABLE `Business` ADD COLUMN `rawCnpj` VARCHAR(191) NOT NULL;
+
+-- CreateIndex
+CREATE UNIQUE INDEX `Business_rawCnpj_key` ON `Business`(`rawCnpj`);
+
+-- AddForeignKey
+ALTER TABLE `Business` ADD CONSTRAINT `Business_enderecoId_fkey` FOREIGN KEY (`enderecoId`) REFERENCES `Address`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

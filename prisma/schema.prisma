@@ -12,13 +12,14 @@ datasource db {
 
 model Business {
   id                  Int      @id @default(autoincrement())
-  cnpj                String   @unique
+  cnpj                String
+  rawCnpj             String   @unique
   razao_social        String
   nome_fantasia       String
   atividade_principal String
   data_de_abertura    String
   natureza_juridica   String
-  endereco            Address  @relation(fields: [enderecoId], references: [id])
+  endereco            Address  @relation(fields: [enderecoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   enderecoId          Int      @unique
   createdAt           DateTime @default(now())
   updateAt            DateTime @updatedAt
