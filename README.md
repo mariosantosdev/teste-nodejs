@@ -4,6 +4,12 @@
 
 Esse teste prático visa avaliar os conhecimentos do candidato a vaga de programador back-end NODEJS.
 
+# EndPoints
+    - <GET> /empresa/:cnpj - Retorna as informações da empresa
+    - <PUT> /empresa/cnpj - Atualiza as informações da empresa
+    - <DELETE> /empresa/cnpj - Deleta as informações da empresa
+    - O end point `GET` e `PUT`, se a empresa não estiver cadastrada no banco de dados, ela será automaticamente criada.
+
 # Objetivos
   - Conhecer um pouco de suas habilidades em:
     - NODEJS;
